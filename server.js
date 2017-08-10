@@ -76,7 +76,11 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 console.info(`Uploads will be saved in ${UPLOAD_DIR}`)
 
 app.use(express.static(path.join(__dirname, 'build')))
-
+app.use((req, res) => {
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  const UA = req.headers['user-agent']
+  console.log(`User IP: ${ip}... User-Agent: ${UA}`)
+})
 app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
